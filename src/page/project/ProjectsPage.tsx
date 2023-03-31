@@ -1,5 +1,5 @@
 import React from "react";
-import ProjectList from "../../component/projectlist/ProjectList";
+import ProjectList from "../../components/projectlist/ProjectList";
 import {MOCK_PROJECTS} from "../../data/Mock_Projects";
 
 function ProjectsPage() {

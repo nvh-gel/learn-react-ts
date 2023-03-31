@@ -1,9 +1,8 @@
 import React from "react";
 import {Project} from "../../model/Project";
 import ProjectCard from "../projectcard";
-import ProjectForm from "../projectform";
 
-export default function ProjectList(props: any) {
+function ProjectList(props: any) {
 
     const {projects} = props;
 
@@ -13,10 +12,11 @@ export default function ProjectList(props: any) {
                 return (
                     <div key={project.id} className="cols-sm">
                         <ProjectCard project={project}/>
-                        <ProjectForm />
                     </div>
                 );
             })}
         </div>
     );
 }
+
+export default ProjectList;
