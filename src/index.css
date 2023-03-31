@@ -8,3 +8,17 @@
 .project-img {
     height: 300px;
 }
+
+html,
+body,
+#root,
+.container,
+.center-page {
+  height: 100%;
+}
+
+.center-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

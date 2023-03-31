@@ -66,10 +66,8 @@ function ProjectCard(props: ProjectCardProps) {
             <FormItem label="Is Active" name="isActive" valuePropName="checked" initialValue={project.isActive}>
                 <Input type="checkbox"/>
             </FormItem>
-            <FormItem name="submit">
+            <FormItem>
                 <Button type="primary" size="large" htmlType="submit" disabled={isInvalid}>Save</Button>
-            </FormItem>
-            <FormItem name="cancel">
                 <Button type="primary" size="large" onClick={finishEditing}>Cancel</Button>
             </FormItem>
         </Form>
