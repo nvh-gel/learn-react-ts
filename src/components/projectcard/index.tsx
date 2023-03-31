@@ -6,6 +6,7 @@ import FormItem from "antd/es/form/FormItem";
 import Input from "antd/es/input/Input";
 import TextArea from "antd/es/input/TextArea";
 
+
 interface ProjectCardProps {
     project: Project,
 }
@@ -15,6 +16,8 @@ function ProjectCard(props: ProjectCardProps) {
     const {project} = props;
 
     const [editing, setEditing] = useState(false);
+
+    const [isInvalid, setInvalid] = useState<boolean>(false);
 
     const handleEditClick = () => {
         setEditing(true);
@@ -29,12 +32,27 @@ function ProjectCard(props: ProjectCardProps) {
         finishEditing();
     }
 
+    function handleFieldsChange(changes: any[]) {
+        const errCount = changes.reduce((errCount, change) => errCount + change.errors.length, 0);
+        if (errCount > 0) {
+            setInvalid(true);
+        } else {
+            setInvalid(false);
+        }
+    }
+
+    const budgetRule = [{
+        message: 'Budget must be larger than 0.',
+        pattern: /^[1-9]\d*$/,
+    }];
+
     const editForm = <div className="card project-card">
         <Form
             name="project"
             layout="vertical"
             wrapperCol={{span: 20}}
             onFinish={onSave}
+            onFieldsChange={handleFieldsChange}
         >
             <FormItem label="Project Name" name="name" initialValue={project.name}>
                 <Input placeholder="enter project name"/>
@@ -42,14 +60,16 @@ function ProjectCard(props: ProjectCardProps) {
             <FormItem label="Project Description" name="description" initialValue={project.description}>
                 <TextArea placeholder="enter project description"/>
             </FormItem>
-            <FormItem label="Project Budget" name="budget" initialValue={project.budget}>
+            <FormItem label="Project Budget" name="budget" initialValue={project.budget} rules={budgetRule}>
                 <Input type="number" placeholder="enter budget"/>
             </FormItem>
             <FormItem label="Is Active" name="isActive" valuePropName="checked" initialValue={project.isActive}>
                 <Input type="checkbox"/>
             </FormItem>
-            <FormItem>
-                <Button type="primary" size="large" htmlType="submit">Save</Button>
+            <FormItem name="submit">
+                <Button type="primary" size="large" htmlType="submit" disabled={isInvalid}>Save</Button>
+            </FormItem>
+            <FormItem name="cancel">
                 <Button type="primary" size="large" onClick={finishEditing}>Cancel</Button>
             </FormItem>
         </Form>
