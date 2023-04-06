@@ -1,12 +1,13 @@
 import {Project} from "../../model/Project";
-import {Button, Form} from "antd";
-import {EditOutlined} from "@ant-design/icons";
+import {Button, Card, Checkbox, Col, Divider, Form, Image, InputNumber, Space, Typography} from "antd";
 import React, {useState} from "react";
-import FormItem from "antd/es/form/FormItem";
 import Input from "antd/es/input/Input";
-import TextArea from "antd/es/input/TextArea";
 import {projectAPI} from "../../api/ProjectAPI";
+import {EditOutlined} from "@ant-design/icons";
+import Meta from "antd/es/card/Meta";
+import TextArea from "antd/es/input/TextArea";
 
+const {Text, Link} = Typography;
 
 interface ProjectCardProps {
     project: Project,
@@ -15,12 +16,11 @@ interface ProjectCardProps {
 function ProjectCard(props: ProjectCardProps) {
 
     const {project} = props;
-
     const [editing, setEditing] = useState(false);
-
     const [isInvalid, setInvalid] = useState<boolean>(false);
 
-    const handleEditClick = () => {
+    const handleEditClick = (e: any) => {
+        e.preventDefault();
         setEditing(true);
     }
 
@@ -34,7 +34,7 @@ function ProjectCard(props: ProjectCardProps) {
             .put(project)
             .catch((e: TypeError) => {
                 console.log(e);
-                throw new Error('Error occured.');
+                throw new Error('Error occurred.');
             });
         finishEditing();
     }
@@ -53,48 +53,51 @@ function ProjectCard(props: ProjectCardProps) {
         pattern: /^[1-9]\d*$/,
     }];
 
-    const editForm = <div className="card project-card">
-        <Form
-            name="project"
-            layout="vertical"
-            wrapperCol={{span: 20}}
-            onFinish={onSave}
-            onFieldsChange={handleFieldsChange}
-        >
-            <FormItem label="Project Name" name="name" initialValue={project.name}>
-                <Input placeholder="enter project name"/>
-            </FormItem>
-            <FormItem label="Project Description" name="description" initialValue={project.description}>
-                <TextArea placeholder="enter project description"/>
-            </FormItem>
-            <FormItem label="Project Budget" name="budget" initialValue={project.budget} rules={budgetRule}>
-                <Input type="number" placeholder="enter budget"/>
-            </FormItem>
-            <FormItem label="Is Active" name="isActive" valuePropName="checked" initialValue={project.isActive}>
-                <Input type="checkbox"/>
-            </FormItem>
-            <FormItem>
-                <Button type="primary" size="large" htmlType="submit" disabled={isInvalid}>Save</Button>
-                <Button type="primary" size="large" onClick={finishEditing}>Cancel</Button>
-            </FormItem>
-        </Form>
-    </div>;
+    const editForm = (
+        <Col span={6}>
+            <Card>
+                <Form name="editProject" layout="vertical" onFinish={onSave} onFieldsChange={handleFieldsChange}>
+                    <Form.Item label="Project Name" name="name" initialValue={project.name}>
+                        <Input type="text"/>
+                    </Form.Item>
+                    <Form.Item label="Description" name="description" initialValue={project.description}>
+                        <TextArea/>
+                    </Form.Item>
+                    <Form.Item label="Budget" name="budget" initialValue={project.budget} rules={budgetRule}>
+                        <InputNumber/>
+                    </Form.Item>
+                    <Form.Item label="Is Active" name="isActive" valuePropName="checked" initialValue={project.isActive}>
+                        <Checkbox/>
+                    </Form.Item>
+                    <Button type="primary" htmlType="submit" disabled={isInvalid}>Save</Button>
+                    <Divider type="vertical"/>
+                    <Button type="primary" onClick={finishEditing}>Cancel</Button>
+                </Form>
+            </Card>
+        </Col>
+    );
 
-    const projectCard = <div className="card project-card">
-        <img src={project.imageUrl} className="project-img" alt=""/>
-        <section className="section dark">
-            <h5 className="strong"><strong>{project.name}</strong></h5>
-            <p>{formatDescription(project.description)}</p>
-            <p>{project.budget.toLocaleString()}</p>
-            <Button
-                type="primary"
-                icon={<EditOutlined/>}
-                size="large"
-                className="bordered"
-                onClick={handleEditClick}
-            >Edit</Button>
-        </section>
-    </div>;
+    const projectCard = (
+        <Col span={6}>
+            <Link href={"#/projects/" + project.id}>
+                <Card
+                    cover={<Image src={project.imageUrl} alt="" style={{padding: '4px'}} preview={false}/>}
+                >
+                    <Space direction="vertical">
+                        <Meta title={project.name}/>
+                        <Text>{formatDescription(project.description)}</Text>
+                        <Button
+                            type="primary"
+                            icon={<EditOutlined/>}
+                            size="large"
+                            className="bordered"
+                            onClick={handleEditClick}
+                        >Edit</Button>
+                    </Space>
+                </Card>
+            </Link>
+        </Col>
+    );
 
     return editing ? editForm : projectCard;
 }

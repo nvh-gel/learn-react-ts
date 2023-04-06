@@ -1,5 +1,6 @@
 import {Project} from "../model/Project";
 
+
 const baseUrl = 'http://localhost:4000'
 const url = `${baseUrl}/projects`;
 
@@ -65,7 +66,7 @@ const projectAPI = {
             method: 'PUT',
             body: JSON.stringify(project),
             headers: {
-                'Content-Type': 'appplication/json',
+                'Content-Type': 'application/json',
             },
         })
             .then(checkStatus)
@@ -73,6 +74,18 @@ const projectAPI = {
             .catch((error: TypeError) => {
                 console.log('log client error: ' + error);
                 throw new Error('There was error during updating the project. Please try again.')
+            });
+    },
+
+    find(id: number) {
+        return fetch(`${url}/${id}`)
+            .then(delay(100))
+            .then(checkStatus)
+            .then(parseJSON)
+            .then(toModel)
+            .catch((error: TypeError) => {
+                console.log('log client error' + error);
+                throw new Error('Error occurred.');
             });
     },
 };

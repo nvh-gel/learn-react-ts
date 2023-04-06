@@ -1,44 +1,101 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './App.css';
-import {BrowserRouter, NavLink, Route, Routes} from "react-router-dom";
+import {Breadcrumb, Layout, Menu, MenuProps, Space, theme, Typography} from "antd";
+import {HomeOutlined, ProjectOutlined} from "@ant-design/icons";
+import {Content, Footer, Header} from "antd/es/layout/layout";
+import {HashRouter, Link, NavLink, Route, Routes, useLocation} from "react-router-dom";
 import HomePage from "./page/home/Home";
 import ProjectsPage from "./page/project/ProjectsPage";
-import {Menu, MenuProps} from "antd";
-import {HomeOutlined, ProjectOutlined} from "@ant-design/icons";
+import ProjectDetailPage from "./page/project/ProjectDetailPage";
+
+const {Text} = Typography;
 
 const items: MenuProps['items'] = [
     {
         label: (
             <NavLink to="/">Home</NavLink>
         ),
-        key: 'home',
+        key: '/',
         icon: <HomeOutlined/>,
     },
     {
         label: (
             <NavLink to="/projects">Projects</NavLink>
-        ), key: 'projects', icon: <ProjectOutlined/>
+        ),
+        key: '/projects',
+        icon: <ProjectOutlined/>
     },
 ];
 
-function App() {
-    const [currentSelect, setCurrentSelect] = useState('home')
+const breadCrumbMap: Record<string, string> = {
+    '/projects': 'Projects'
+}
 
-    function handleMenuClick(e: any) {
-        setCurrentSelect(e.key);
-    }
+
+function Page() {
+    const {token: {colorBgContainer}} = theme.useToken();
+    const location = useLocation();
+    const pathSnippets = location.pathname.split('/').filter((i) => i);
+    const extraBreadcrumbItems = pathSnippets.map((_, index) => {
+        const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+        const text = breadCrumbMap[url] ? breadCrumbMap[url] : 'Detail';
+        return {
+            key: url,
+            text: text,
+            title: <Link to={url}>{text}</Link>,
+        };
+    });
+    let breadCrumbItems = [{
+        title: <Link to="/">Home</Link>,
+        text: 'Home',
+        key: 'home',
+    }].concat(extraBreadcrumbItems);
 
     return (
-        <BrowserRouter>
-            <Menu items={items} mode="horizontal" selectedKeys={[currentSelect]} onClick={handleMenuClick}/>
-            <div className="container">
-                <Routes>
-                    <Route path="/" element={<HomePage/>}/>
-                    <Route path="/projects" element={<ProjectsPage/>}/>
-                </Routes>
-            </div>
-        </BrowserRouter>
+        <div className="container">
+            <Layout className="layout">
+                <Header>
+                    <div className="logo"/>
+                    <Menu
+                        mode="horizontal"
+                        theme="dark"
+                        items={items}
+                        selectedKeys={[location.pathname]}
+                    />
+                </Header>
+                <Content className="content">
+                    <Breadcrumb className="breadcrumb" separator=">" items={breadCrumbItems}/>
+                    <div className="site-layout-content" style={{background: colorBgContainer}}>
+                        <Routes>
+                            <Route path="/"
+                                   key="home"
+                                   element={<HomePage/>}
+                            />
+                            <Route path="/projects"
+                                   key="projects"
+                                   element={<ProjectsPage/>}
+                            />
+                            <Route path="/projects/:id"
+                                   key="detail"
+                                   element={<ProjectDetailPage/>}
+                            />
+                        </Routes>
+                    </div>
+                </Content>
+                <Footer>
+                    <Space direction="horizontal" style={{width: '100%', justifyContent: 'center'}}>
+                        <Text>Developed by Eden.</Text>
+                    </Space>
+                </Footer>
+            </Layout>
+        </div>
     );
 }
+
+const App: React.FC = () => (
+    <HashRouter>
+        <Page/>
+    </HashRouter>
+);
 
 export default App;

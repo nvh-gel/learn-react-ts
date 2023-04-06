@@ -1,8 +1,11 @@
 import React from "react";
+import {Typography} from "antd";
 
 function HomePage() {
 
-    return (<h2>Home Page</h2>);
+    return (
+        <Typography.Title level={2}>Home Page</Typography.Title>
+    );
 }
 
 export default HomePage;

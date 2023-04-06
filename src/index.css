@@ -1,24 +1,2 @@
-@import "../node_modules/mini.css/dist/mini-default.min.css";
+/*@import "../node_modules/mini.css/dist/mini-default.min.css";*/
 @import "antd/dist/reset.css";
-
-.project-card {
-    width: 500px;
-}
-
-.project-img {
-    height: 300px;
-}
-
-html,
-body,
-#root,
-.container,
-.center-page {
-  height: 100%;
-}
-
-.center-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}

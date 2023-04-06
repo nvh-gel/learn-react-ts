@@ -1,8 +1,10 @@
-import React, {Fragment, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import ProjectList from "../../components/projectlist/ProjectList";
 import {Project} from "../../model/Project";
 import {projectAPI} from "../../api/ProjectAPI";
-import {Button} from "antd";
+import {Alert, Space, Spin} from "antd";
+import Title from "antd/es/typography/Title";
+import Link from "antd/es/typography/Link";
 
 
 function ProjectsPage() {
@@ -35,39 +37,28 @@ function ProjectsPage() {
                 setLoading(false);
             }
         }
+
         loadProjects();
     }, [currentPage]);
 
     return (
-        <Fragment>
+        <Space direction="vertical" className="background-blue">
+            <Title level={2}>Projects Page</Title>
             {error && (
-                <div className="row">
-                    <div className="card large error">
-                        <section>
-                            <p>
-                                <span className="icon-alert inverse "></span>
-                                {error}
-                            </p>
-                        </section>
-                    </div>
-                </div>
+                <Alert message={error} type="error"/>
             )}
-            <h1>Projects</h1>
             <ProjectList projects={projects}/>
-            {!loading && !error && (
-                <div className="row">
-                    <div className="col-sm-12">
-                        <Button type="link" onClick={handleMoreClick}>More...</Button>
-                    </div>
-                </div>
-            )}
             {loading && (
-                <div className="center-page">
-                    <span className="spinner primary"></span>
-                    <p>Loading...</p>
-                </div>
+                <Space className="align-middle">
+                    <Spin size="large"/>
+                </Space>
             )}
-        </Fragment>
+            {!error && !loading && (
+                <Space className="align-middle">
+                    <Link onClick={handleMoreClick}>More...</Link>
+                </Space>
+            )}
+        </Space>
     );
 }
 

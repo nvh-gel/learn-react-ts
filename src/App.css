@@ -1,11 +1,33 @@
-header {
-    height: 5.1875rem;
+.site-layout-content {
+    min-height: 280px;
+    padding: 24px;
 }
 
-a.button.active {
-    border: 1px solid var(--fore-color);
+.logo {
+    float: left;
+    width: 120px;
+    height: 31px;
+    margin: 16px 24px 16px 0;
+    background: rgba(255, 255, 255, 0.3);
 }
 
-a:link {
-    text-decoration: none;
+.ant-row-rtl .logo {
+    float: right;
+    margin: 16px 0 16px 24px;
+}
+
+.content {
+    padding: 0 50px;
+}
+
+.breadcrumb {
+    margin: 16px 0;
+}
+
+.align-middle {
+    width: 100%;
+    justify-content: center;
+}
+.background-blue {
+    background: #0277bd;
 }
