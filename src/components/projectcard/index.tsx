@@ -5,6 +5,7 @@ import React, {useState} from "react";
 import FormItem from "antd/es/form/FormItem";
 import Input from "antd/es/input/Input";
 import TextArea from "antd/es/input/TextArea";
+import {projectAPI} from "../../api/ProjectAPI";
 
 
 interface ProjectCardProps {
@@ -29,6 +30,12 @@ function ProjectCard(props: ProjectCardProps) {
 
     const onSave = (proj: Project) => {
         Object.assign(project, proj);
+        projectAPI
+            .put(project)
+            .catch((e: TypeError) => {
+                console.log(e);
+                throw new Error('Error occured.');
+            });
         finishEditing();
     }
 

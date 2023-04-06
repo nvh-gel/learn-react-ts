@@ -49,7 +49,7 @@ function toModels(data: any[]): Project[] {
 
 const projectAPI = {
     get(page = 1, limit = 20) {
-        return fetch(`${url}?page=${page}&limit=${limit}&sort=name`)
+        return fetch(`${url}?_page=${page}&_limit=${limit}&sort=name`)
             .then(delay(600))
             .then(checkStatus)
             .then(parseJSON)
@@ -57,6 +57,22 @@ const projectAPI = {
             .catch((error: TypeError) => {
                 console.log('log client error' + error);
                 throw new Error('Error occurred.');
+            });
+    },
+
+    put(project: Project) {
+        return fetch(`${url}/${project.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(project),
+            headers: {
+                'Content-Type': 'appplication/json',
+            },
+        })
+            .then(checkStatus)
+            .then(parseJSON)
+            .catch((error: TypeError) => {
+                console.log('log client error: ' + error);
+                throw new Error('There was error during updating the project. Please try again.')
             });
     },
 };
