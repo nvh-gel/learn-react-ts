@@ -2,10 +2,14 @@ import {Project} from "../../model/Project";
 import {Button, Card, Checkbox, Col, Divider, Form, Image, InputNumber, Space, Typography} from "antd";
 import React, {useState} from "react";
 import Input from "antd/es/input/Input";
-import {projectAPI} from "../../api/ProjectAPI";
 import {EditOutlined} from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
 import TextArea from "antd/es/input/TextArea";
+import {useDispatch} from "react-redux";
+import {ThunkDispatch} from "redux-thunk";
+import {ProjectState} from "../../projects/state/ProjectTypes";
+import {AnyAction} from "redux";
+import {saveProject} from "../../projects/state/ProjectActions";
 
 const {Text, Link} = Typography;
 
@@ -18,6 +22,7 @@ function ProjectCard(props: ProjectCardProps) {
     const {project} = props;
     const [editing, setEditing] = useState(false);
     const [isInvalid, setInvalid] = useState<boolean>(false);
+    const dispatch = useDispatch<ThunkDispatch<ProjectState, any, AnyAction>>();
 
     const handleEditClick = (e: any) => {
         e.preventDefault();
@@ -30,12 +35,7 @@ function ProjectCard(props: ProjectCardProps) {
 
     const onSave = (proj: Project) => {
         Object.assign(project, proj);
-        projectAPI
-            .put(project)
-            .catch((e: TypeError) => {
-                console.log(e);
-                throw new Error('Error occurred.');
-            });
+        dispatch(saveProject(project));
         finishEditing();
     }
 
@@ -66,7 +66,8 @@ function ProjectCard(props: ProjectCardProps) {
                     <Form.Item label="Budget" name="budget" initialValue={project.budget} rules={budgetRule}>
                         <InputNumber/>
                     </Form.Item>
-                    <Form.Item label="Is Active" name="isActive" valuePropName="checked" initialValue={project.isActive}>
+                    <Form.Item label="Is Active" name="isActive" valuePropName="checked"
+                               initialValue={project.isActive}>
                         <Checkbox/>
                     </Form.Item>
                     <Button type="primary" htmlType="submit" disabled={isInvalid}>Save</Button>

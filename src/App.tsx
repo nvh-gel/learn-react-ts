@@ -7,6 +7,8 @@ import {HashRouter, Link, NavLink, Route, Routes, useLocation} from "react-route
 import HomePage from "./page/home/Home";
 import ProjectsPage from "./page/project/ProjectsPage";
 import ProjectDetailPage from "./page/project/ProjectDetailPage";
+import {Provider} from "react-redux";
+import {store} from "./state";
 
 const {Text} = Typography;
 
@@ -93,9 +95,11 @@ function Page() {
 }
 
 const App: React.FC = () => (
-    <HashRouter>
-        <Page/>
-    </HashRouter>
+    <Provider store={store}>
+        <HashRouter>
+            <Page/>
+        </HashRouter>
+    </Provider>
 );
 
 export default App;
