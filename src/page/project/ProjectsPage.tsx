@@ -42,7 +42,7 @@ function ProjectsPage() {
     }, [currentPage]);
 
     return (
-        <Space direction="vertical" className="background-blue">
+        <Space direction="vertical">
             <Title level={2}>Projects Page</Title>
             {error && (
                 <Alert message={error} type="error"/>
